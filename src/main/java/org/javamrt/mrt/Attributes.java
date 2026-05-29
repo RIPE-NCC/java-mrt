@@ -251,15 +251,16 @@ public class Attributes {
 
 				case MRTConstants.LARGE_COMMUNITY:
 					if (buffer.length > 0) {
-						Attribute largeCommunity = new LargeCommunity(buffer);
-						attributes.set(MRTConstants.ATTRIBUTE_LARGE_COMMUNITY, largeCommunity);
+						int numberLargeCommunities = len/12; //12 bytes per large community
+						Attribute largeCommunities = new LargeCommunities(buffer, numberLargeCommunities);
+						attributes.set(MRTConstants.ATTRIBUTE_LARGE_COMMUNITIES, largeCommunities);
 					}
 					break;
 
 				default:
 					// make sure to not overwrite other attributes in the Vector,
 					// as index in the Vector is not the same as type value
-					if (type > MRTConstants.ATTRIBUTE_LARGE_COMMUNITY && type < MRTConstants.ATTRIBUTE_TOTAL) {
+					if (type > MRTConstants.ATTRIBUTE_LARGE_COMMUNITIES && type < MRTConstants.ATTRIBUTE_TOTAL) {
 						final UnsupportedAttribute attribute = new UnsupportedAttribute(type, buffer);
 						attributes.set(type, attribute);
 					} else {
@@ -318,9 +319,9 @@ public class Attributes {
 		return Community.empty();
 	}
 
-	public LargeCommunity getLargeCommunity() {
-		return (LargeCommunity)
-                    attributes.elementAt(MRTConstants.ATTRIBUTE_LARGE_COMMUNITY);
+	public LargeCommunities getLargeCommunities() {
+		return (LargeCommunities)
+                    attributes.elementAt(MRTConstants.ATTRIBUTE_LARGE_COMMUNITIES);
 	}
 
 	public Med getMed() {

@@ -8,7 +8,7 @@ package org.javamrt.mrt;
 
 import org.javamrt.utils.RecordAccess;
 
-public class LargeCommunity implements Attribute {
+public class LargeCommunity {
     protected long globalAdministrator;
     protected long localData1;
     protected long localData2;

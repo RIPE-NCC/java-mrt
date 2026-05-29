@@ -99,15 +99,10 @@ public class LargeCommunitiesTest {
                     if (attributes != null) {
                         LargeCommunities largeCommunity = attributes.getLargeCommunities();
                         if (largeCommunity != null) {
-                            boolean found = false;
                             for (LargeCommunity community : largeCommunity.getLargeCommunities()) {
                                 if (community.globalAdministrator == 26162) {
                                     foundCommunities.add(community.toString());
-                                    found = true;
                                 }
-                            }
-                            if (found) {
-                                System.out.println(largeCommunity.toString());
                             }
                         }
                     }

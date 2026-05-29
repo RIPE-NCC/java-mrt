@@ -22,10 +22,7 @@ public class LargeCommunities implements Attribute {
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder("[");
-    sb.append(largeCommunities.stream()
-        .map(LargeCommunity::toString).collect(Collectors.joining(", ")));
-    sb.append("]");
-    return sb.toString();
+    return "[" + largeCommunities.stream().map(LargeCommunity::toString)
+        .collect(Collectors.joining(", ")) + "]";
   }
 }

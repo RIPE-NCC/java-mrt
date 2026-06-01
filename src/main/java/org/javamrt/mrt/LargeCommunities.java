@@ -16,7 +16,7 @@ public class LargeCommunities implements Attribute {
     }
   }
 
-  List<LargeCommunity> getLargeCommunities() {
+  public List<LargeCommunity> getLargeCommunities() {
     return largeCommunities;
   }
 

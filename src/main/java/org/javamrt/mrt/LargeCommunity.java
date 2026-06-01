@@ -25,6 +25,18 @@ public class LargeCommunity {
                                          localData2);
     }
 
+    public long getGlobalAdministrator() {
+        return globalAdministrator;
+    }
+
+    public long getLocalData1() {
+        return localData1;
+    }
+
+    public long getLocalData2() {
+        return localData2;
+    }
+
     public boolean equals(Object o) {
         if (o == null)
             return false;

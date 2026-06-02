@@ -8,7 +8,7 @@ package org.javamrt.mrt;
 
 import org.javamrt.utils.RecordAccess;
 
-public class LargeCommunity implements Attribute {
+public class LargeCommunity {
     protected long globalAdministrator;
     protected long localData1;
     protected long localData2;
@@ -23,6 +23,18 @@ public class LargeCommunity implements Attribute {
         return String.format("%d:%d:%d", globalAdministrator,
                                          localData1,
                                          localData2);
+    }
+
+    public long getGlobalAdministrator() {
+        return globalAdministrator;
+    }
+
+    public long getLocalData1() {
+        return localData1;
+    }
+
+    public long getLocalData2() {
+        return localData2;
     }
 
     public boolean equals(Object o) {

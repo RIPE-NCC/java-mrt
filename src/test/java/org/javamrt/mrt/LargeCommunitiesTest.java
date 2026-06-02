@@ -7,13 +7,16 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Base64;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Base64;
 import java.util.stream.Collectors;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+
 
 public class LargeCommunitiesTest {
     @Test
@@ -36,10 +39,14 @@ public class LargeCommunitiesTest {
                     Bgp4Update bgp4update = (Bgp4Update) mrtRecord;
                     Attributes attributes = bgp4update.getAttributes();
                     if (attributes != null) {
-                        LargeCommunity largeCommunity =
-                            attributes.getLargeCommunity();
-                        if (largeCommunity != null) {
-                            largeCommunities.add(largeCommunity);
+                        LargeCommunities communities =
+                            attributes.getLargeCommunities();
+                        if (communities != null) {
+                            for (LargeCommunity community : communities.getLargeCommunities()) {
+                                if (community != null) {
+                                    largeCommunities.add(community);
+                                }
+                            }
                         }
                     }
                 }
@@ -72,5 +79,46 @@ public class LargeCommunitiesTest {
         }
         assertEquals(mrtRecord.getClass(), Advertisement.class);
         assertEquals(mrtRecord.toString(), "BGP4MP|1602194848|A|91.206.52.130|58299|158.247.123.0/24|58299 6939 32261|IGP|91.206.52.130|0|0|58299:1000|NAG||");
+    }
+
+    @Test
+    public void should_parse_multiple_large_communities() {
+        Exception exception = null;
+        Set<String> foundCommunities = new HashSet<>();
+        try (InputStream inputStream = getClass().getResourceAsStream("/updates.20260527.2305")) {
+            BGPFileReader bgpFileReader =
+                new BGPFileReader(new BufferedInputStream(inputStream));
+            while (true) {
+                MRTRecord mrtRecord = bgpFileReader.readNext();
+                if (mrtRecord == null) {
+                    break;
+                }
+                if (mrtRecord instanceof Bgp4Update) {
+                    Bgp4Update bgp4update = (Bgp4Update) mrtRecord;
+                    Attributes attributes = bgp4update.getAttributes();
+                    if (attributes != null) {
+                        LargeCommunities largeCommunity = attributes.getLargeCommunities();
+                        if (largeCommunity != null) {
+                            for (LargeCommunity community : largeCommunity.getLargeCommunities()) {
+                                if (community.globalAdministrator == 26162) {
+                                    foundCommunities.add(community.toString());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            exception = e;
+        }
+        assertNull(exception);
+        assertTrue(foundCommunities.contains("26162:0:65071"), "community not found");
+        assertTrue(foundCommunities.contains("26162:0:266416"), "community not found");
+        assertTrue(foundCommunities.contains("26162:100:2"), "community not found");
+        assertTrue(foundCommunities.contains("26162:200:2"), "community not found");
+        assertTrue(foundCommunities.contains("26162:300:1"), "community not found");
+        assertTrue(foundCommunities.contains("26162:660:1"), "community not found");
+        assertTrue(foundCommunities.contains("26162:670:1"), "community not found");
+        assertTrue(foundCommunities.contains("26162:680:2"), "community not found");
     }
 }
